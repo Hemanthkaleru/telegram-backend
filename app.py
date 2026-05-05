@@ -1,3 +1,24 @@
+from flask import Flask, request, jsonify
+import requests
+import os
+
+# ✅ CREATE APP FIRST
+app = Flask(__name__)
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+
+
+@app.route("/")
+def home():
+    return "Backend running"
+
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
+
 @app.route("/send", methods=["POST"])
 def send():
     data = request.json
@@ -11,10 +32,9 @@ def send():
         "text": text
     })
 
-    print("Telegram status:", res.status_code)
     print("Telegram response:", res.text)
 
-    return {
+    return jsonify({
         "status": "sent",
         "telegram_response": res.text
-    }
+    })
